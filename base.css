@@ -1,0 +1,123 @@
+* {
+  box-sizing: border-box;
+  font-family: "Sen", "Avenir Next LT Pro", "Arial Narrow", Arial, sans-serif;
+}
+
+body {
+  padding: 50px;
+  background: #eee;
+  color: #222;
+}
+
+.minimal-scrollbar::-webkit-scrollbar {
+  width: 14px;
+}
+
+.minimal-scrollbar::-webkit-scrollbar-track {
+  background: rgba(80, 80, 80, 0.1);
+}
+
+.minimal-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(80, 80, 80, 0.9);
+}
+
+h1 {
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 0.7;
+  font-size: 50px;
+}
+
+h1 span {
+  color: #bbb;
+}
+.charts {
+  display: flex;
+}
+
+.chart-wrapper {
+  width: 370px;
+  margin-right: 10px;
+  background: #f7f7f7;
+  border-radius: 10px;
+}
+
+textarea {
+  outline: none;
+  border: none;
+  width: 400px;
+  height: 200px;
+  background: #222;
+  color: #eee;
+  padding: 10px;
+  font-family: "Consolas", monospace;
+  display: block;
+}
+
+.button {
+  background: #5577ee;
+  color: white;
+  padding: 5px 20px;
+  font-weight: bold;
+  border-radius: 10px;
+  display: inline-block;
+  font-size: 20px;
+}
+
+*[clickable] {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+*[clickable]:hover {
+  opacity: 0.7;
+}
+
+textarea,
+.button,
+.representations {
+  margin-bottom: 20px;
+}
+
+.representations {
+  display: flex;
+}
+
+.single-rep {
+  margin-right: 10px;
+}
+
+.single-rep label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  padding-bottom: 20px;
+  background: white;
+  border-radius: 30px;
+  transition: all 0.2s;
+}
+
+[disabled] + label {
+  opacity: 0.4;
+}
+
+.single-rep input {
+  display: none;
+}
+
+.single-rep input:checked + label {
+  transform: translateY(-4px);
+  filter: brightness(88%);
+}
+
+.single-rep img {
+  width: 100px;
+}
+
+.single-rep span {
+  color: #ccc;
+  font-weight: bold;
+  font-size: 10px;
+}

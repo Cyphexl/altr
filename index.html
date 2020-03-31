@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" type="text/css" href="distrochart.css" />
+  <link rel="stylesheet" href="base.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://d3js.org/d3.v3.js"></script>
+</head>
+
+<body>
+  <h1>Alternative<br />Representation.</h1>
+  <p>I want to use the following CSV-format data</p>
+  <textarea placeholder="Paste your CSV data here..."></textarea>
+  <p>And use this as the alternative form of data representation</p>
+  <div class="representations">
+    <div class="single-rep">
+      <input type="radio" id="r1" value="r1" name="rep" />
+      <label for="r1" clickable>
+        <img src="assets/r1.png" />
+        <span>Box Plot</span>
+      </label>
+    </div>
+    <div class="single-rep">
+      <input type="radio" id="r2" value="r2" name="rep" />
+      <label for="r2" clickable>
+        <img src="assets/r2.png" />
+        <span>Violin Plot</span>
+      </label>
+    </div>
+    <div class="single-rep">
+      <input type="radio" id="r3" value="r3" name="rep" />
+      <label for="r3" clickable>
+        <img src="assets/r3.png" />
+        <span>Beeswarm</span>
+      </label>
+    </div>
+    <div class="single-rep">
+      <input type="radio" id="r4" value="r4" name="rep" disabled />
+      <label for="r4">
+        <img src="assets/r4.png" />
+        <span>Bean Plot</span>
+      </label>
+    </div>
+    <div class="single-rep">
+      <input type="radio" id="r5" value="r5" name="rep" disabled />
+      <label for="r5">
+        <img src="assets/r5.png" />
+        <span>Scatter Plot</span>
+      </label>
+    </div>
+    <div class="single-rep">
+      <input type="radio" id="r6" value="r6" name="rep" />
+      <label for="r6" clickable>
+        <img src="assets/r6.png" />
+        <span>Bars</span>
+      </label>
+    </div>
+  </div>
+  <div id="go" class="button" onclick="go()" clickable>
+    Generate Comic Panels
+  </div>
+  <div class="charts">
+    <div class="chart-wrapper">
+      <div class="chart" id="chart-bar"></div>
+    </div>
+    <div class="chart-wrapper">
+      <div class="chart" id="chart-distro"></div>
+    </div>
+  </div>
+</body>
+
+<script src="distrochart.js" charset="utf-8"></script>
+<script type="text/javascript">
+  const init = () => {
+    let chart1;
+    d3.csv("data2.csv", function(error, data) {
+      console.log(data);
+    });
+  };
+
+  fetch("data2.csv")
+    .then(r => r.text())
+    .then(t => $("textarea").val(t));
+
+  const go = () => {
+    $("#chart-distro").fadeTo(300, 0, () => {
+      let csvVal = $("textarea").val();
+      $("#chart-bar").html("");
+      $("#chart-distro").html("");
+      let parsed = [];
+      d3.csv.parse(csvVal, function(data) {
+        parsed.push(data);
+      });
+      parsed.forEach(function(d) {
+        d.value = +d.value;
+      });
+      const columns = Object.keys(parsed[0]);
+
+      const baseChartConfig = {
+        data: parsed,
+        xName: columns[0],
+        yName: columns[1],
+        axisLabels: { xAxis: null, yAxis: columns[1] },
+        chartSize: { height: 333, width: 333 },
+        constrainExtremes: true
+      };
+
+      chart1 = makeDistroChart({
+        ...baseChartConfig,
+        selector: "#chart-bar"
+      });
+      chart1.renderDataPlots();
+      chart1.dataPlots.change({
+        showLines: ["median", "quartile1", "quartile3"]
+      });
+
+      let rep = $("input[type='radio']:checked").val();
+
+      switch (rep) {
+        case "r1":
+          chart2 = makeDistroChart({
+            ...baseChartConfig,
+            selector: "#chart-distro"
+          });
+          chart2.renderBoxPlot();
+          break;
+        case "r2":
+          chart2 = makeDistroChart({
+            ...baseChartConfig,
+            selector: "#chart-distro"
+          });
+          chart2.renderViolinPlot({ showViolinPlot: false });
+          chart2.violinPlots.show({ reset: true, clamp: 0 });
+          break;
+        case "r3":
+          chart2 = makeDistroChart({
+            ...baseChartConfig,
+            selector: "#chart-distro"
+          });
+          chart2.renderDataPlots({ showViolinPlot: false });
+          chart2.dataPlots.show({
+            showPlot: true,
+            plotType: "beeswarm",
+            showBeanLines: false,
+            colors: null
+          });
+          break;
+        case "r4":
+          chart2 = makeDistroChart({
+            ...baseChartConfig,
+            selector: "#chart-distro"
+          });
+          chart2.renderViolinPlot({ showViolinPlot: false });
+          chart2.violinPlots.show({ reset: true, clamp: 0 });
+          break;
+        case "r5":
+          chart2 = makeDistroChart({
+            ...baseChartConfig,
+            selector: "#chart-distro"
+          });
+          chart2.renderViolinPlot({ showViolinPlot: false });
+          chart2.violinPlots.show({ reset: true, clamp: 0 });
+          break;
+
+        case "r6":
+          chart2 = makeDistroChart({
+            ...baseChartConfig,
+            selector: "#chart-distro"
+          });
+          chart2.renderDataPlots();
+          chart2.dataPlots.change({
+            showLines: ["median"]
+          });
+          break;
+        default:
+          alert("Please choose a representation");
+          break;
+      }
+
+      setTimeout(() => {
+        $("#chart-distro").fadeTo(300, 1);
+      }, 10);
+    });
+  };
+</script>
