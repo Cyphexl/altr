@@ -13,9 +13,14 @@
 
 <body>
   <h1>Alternative<br />Representation.</h1>
-  <p>I want to use the following CSV-format data</p>
-  <textarea placeholder="Paste your CSV data here..."></textarea>
-  <p>And use this as the alternative form of data representation</p>
+  <p><span class="step">Step 1</span>Paste below or upload your CSV data</p>
+  <textarea
+    placeholder="Paste your CSV data here. The CSV should match the two-columns format preset."
+  ></textarea>
+  <p>
+    <span class="step">Step 2</span>Choose the alternative form of
+    representation you would like
+  </p>
   <div class="representations">
     <div class="single-rep">
       <input type="radio" id="r1" value="r1" name="rep" />
@@ -25,7 +30,7 @@
       </label>
     </div>
     <div class="single-rep">
-      <input type="radio" id="r2" value="r2" name="rep" />
+      <input type="radio" id="r2" value="r2" name="rep" checked="checked" />
       <label for="r2" clickable>
         <img src="assets/r2.png" />
         <span>Violin Plot</span>
@@ -56,10 +61,11 @@
       <input type="radio" id="r6" value="r6" name="rep" />
       <label for="r6" clickable>
         <img src="assets/r6.png" />
-        <span>Bars</span>
+        <span>Quantiles</span>
       </label>
     </div>
   </div>
+  <p><span class="step">Step 3</span></p>
   <div id="go" class="button" onclick="go()" clickable>
     Generate Comic Panels
   </div>
@@ -115,7 +121,7 @@
       });
       chart1.renderDataPlots();
       chart1.dataPlots.change({
-        showLines: ["median", "quartile1", "quartile3"]
+        showLines: ["median"]
       });
 
       let rep = $("input[type='radio']:checked").val();
@@ -173,7 +179,7 @@
           });
           chart2.renderDataPlots();
           chart2.dataPlots.change({
-            showLines: ["median"]
+            showLines: ["median", "quartile1", "quartile3"]
           });
           break;
         default:
